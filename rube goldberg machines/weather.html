@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f1e7">
+    <meta
+      name="description"
+      content="One button, three APIs, and an outfit you absolutely did not pack."
+    >
+    <title>A Trip You Never Planned</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Trebuchet MS", Arial, sans-serif;
+        color: #22261f;
+        background: #f5f1e7;
+        font-synthesis: none;
+        --ink: #22261f;
+        --muted: #77796d;
+        --paper: #fffdf7;
+        --orange: #f26b42;
+        --lime: #d5f06d;
+        --line: #dedbce;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        overflow-x: hidden;
+        background:
+          radial-gradient(ellipse at 87% 7%, #e3ebc9 0, transparent 25rem),
+          radial-gradient(ellipse at 4% 58%, #f1dec9 0, transparent 28rem),
+          #f5f1e7;
+      }
+
+      body::before {
+        position: fixed;
+        z-index: -1;
+        inset: 0;
+        background-image: radial-gradient(#22261f12 0.65px, transparent 0.65px);
+        background-size: 6px 6px;
+        content: "";
+        pointer-events: none;
+      }
+
+      button {
+        font: inherit;
+      }
+
+      .page {
+        width: min(100% - 40px, 1120px);
+        margin: 0 auto;
+        padding: 28px 0 46px;
+      }
+
+      .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        color: var(--muted);
+        font-size: 0.71rem;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        color: var(--ink);
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 27px;
+        height: 27px;
+        place-items: center;
+        border: 1px solid var(--ink);
+        border-radius: 50%;
+        font-size: 0.95rem;
+      }
+
+      .hero {
+        position: relative;
+        display: grid;
+        min-height: 390px;
+        align-content: center;
+        justify-items: center;
+        padding: 48px 0 42px;
+        text-align: center;
+      }
+
+      .hero::before,
+      .hero::after {
+        position: absolute;
+        z-index: -1;
+        display: grid;
+        width: 82px;
+        height: 82px;
+        place-items: center;
+        border: 1px solid #22261f20;
+        border-radius: 50%;
+        color: #22261f9c;
+        content: "✳";
+        font-size: 2.5rem;
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .hero::before {
+        top: 85px;
+        left: 8%;
+      }
+
+      .hero::after {
+        right: 8%;
+        bottom: 69px;
+        width: 56px;
+        height: 56px;
+        content: "↗";
+        font-size: 1.6rem;
+        animation-delay: -2s;
+      }
+
+      @keyframes float {
+        50% { transform: translateY(-9px) rotate(8deg); }
+      }
+
+      .eyebrow,
+      .step-label {
+        margin: 0;
+        color: var(--orange);
+        font-size: 0.7rem;
+        font-weight: 900;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        max-width: 900px;
+        margin: 14px 0 12px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(3.4rem, 9vw, 7.5rem);
+        font-weight: 500;
+        letter-spacing: -0.075em;
+        line-height: 0.88;
+      }
+
+      h1 em {
+        color: var(--orange);
+        font-weight: 500;
+      }
+
+      .intro {
+        max-width: 440px;
+        margin: 14px 0 23px;
+        color: #66685d;
+        font-size: 0.98rem;
+        line-height: 1.6;
+      }
+
+      .launch {
+        display: inline-flex;
+        min-height: 57px;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        border: 1px solid var(--ink);
+        border-radius: 99px;
+        padding: 0 27px;
+        color: var(--ink);
+        background: var(--lime);
+        box-shadow: 4px 5px 0 var(--ink);
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: 900;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transition: transform 150ms ease, box-shadow 150ms ease;
+      }
+
+      .launch:hover:not(:disabled) {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 3px 0 var(--ink);
+      }
+
+      .launch:focus-visible {
+        outline: 3px solid var(--orange);
+        outline-offset: 5px;
+      }
+
+      .launch:disabled {
+        cursor: wait;
+        opacity: 0.72;
+      }
+
+      .launch-icon {
+        font-size: 1.05rem;
+      }
+
+      .status {
+        min-height: 24px;
+        margin: 17px 0 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .status.error {
+        color: #a83525;
+      }
+
+      .journey {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        padding-top: 24px;
+      }
+
+      .journey::before {
+        position: absolute;
+        top: 43px;
+        right: 16.66%;
+        left: 16.66%;
+        border-top: 1px dashed #b9b5a8;
+        content: "";
+      }
+
+      .step {
+        position: relative;
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 17px;
+        background: var(--paper);
+        box-shadow: 0 8px 25px #45433108;
+        opacity: 0.62;
+        transition: opacity 300ms ease, transform 300ms ease, box-shadow 300ms ease;
+      }
+
+      .step.active {
+        transform: translateY(-4px);
+        border-color: #b8c76a;
+        box-shadow: 0 13px 30px #45433113;
+        opacity: 1;
+      }
+
+      .step.ready {
+        opacity: 1;
+      }
+
+      .step-head {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 16px 17px;
+        border-bottom: 1px solid #eeece3;
+        background: #fffefa;
+      }
+
+      .step-number {
+        display: grid;
+        width: 27px;
+        height: 27px;
+        flex: 0 0 auto;
+        place-items: center;
+        border: 1px solid var(--line);
+        border-radius: 50%;
+        color: var(--muted);
+        font-size: 0.72rem;
+        font-weight: 800;
+      }
+
+      .step.active .step-number,
+      .step.ready .step-number {
+        border-color: var(--ink);
+        color: var(--ink);
+        background: var(--lime);
+      }
+
+      .step-head h2 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.17rem;
+        font-weight: 500;
+      }
+
+      .step-content {
+        min-height: 182px;
+        padding: 20px 19px 21px;
+      }
+
+      .placeholder {
+        display: grid;
+        min-height: 137px;
+        place-items: center;
+        color: #9b9a8f;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 0.96rem;
+        font-style: italic;
+        text-align: center;
+      }
+
+      .country-line {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .flag {
+        width: 49px;
+        height: 35px;
+        flex: 0 0 auto;
+        border: 1px solid #22261f17;
+        border-radius: 4px;
+        object-fit: cover;
+        box-shadow: 0 3px 8px #22261f12;
+      }
+
+      .flag-emoji {
+        display: grid;
+        place-items: center;
+        font-size: 1.8rem;
+      }
+
+      .country-name {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.5rem;
+        line-height: 1.05;
+      }
+
+      .capital {
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 0.8rem;
+      }
+
+      .weather-temp {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin: 3px 0 10px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 2.7rem;
+        letter-spacing: -0.06em;
+      }
+
+      .weather-temp span {
+        color: #67685e;
+        font-family: "Trebuchet MS", Arial, sans-serif;
+        font-size: 0.85rem;
+        letter-spacing: 0;
+      }
+
+      .weather-description {
+        margin: 0;
+        font-size: 0.92rem;
+        font-weight: 800;
+      }
+
+      .weather-meta {
+        margin: 7px 0 0;
+        color: var(--muted);
+        font-size: 0.77rem;
+      }
+
+      .outfit-type {
+        margin: 0 0 6px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.62rem;
+        line-height: 1.05;
+      }
+
+      .outfit-color {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.82rem;
+      }
+
+      .query {
+        display: inline-block;
+        margin-top: 13px;
+        border-radius: 99px;
+        padding: 6px 10px;
+        color: #545548;
+        background: #f1f0e8;
+        font-size: 0.69rem;
+      }
+
+      .fashion-result {
+        display: grid;
+        min-height: 185px;
+        grid-template-columns: minmax(100px, 0.82fr) 1fr;
+        align-items: center;
+        gap: 15px;
+        margin-top: 18px;
+      }
+
+      .fashion-result[hidden] {
+        display: none;
+      }
+
+      .fashion-image,
+      .illustration {
+        display: block;
+        width: 100%;
+        height: 185px;
+        border-radius: 11px;
+        background: #eeeadf;
+        object-fit: cover;
+      }
+
+      .fashion-caption {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.78rem;
+        line-height: 1.6;
+      }
+
+      .fashion-caption strong {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--ink);
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 1.12rem;
+        font-weight: 500;
+      }
+
+      .met-link {
+        display: inline-block;
+        margin-top: 7px;
+        color: #6b482b;
+        font-size: 0.73rem;
+        font-weight: 800;
+        text-underline-offset: 3px;
+      }
+
+      .met-link[hidden] {
+        display: none;
+      }
+
+      .fine-print {
+        margin: 21px 0 0;
+        color: #88897d;
+        font-size: 0.7rem;
+        line-height: 1.5;
+        text-align: center;
+      }
+
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        clip-path: inset(50%);
+      }
+
+      @media (max-width: 740px) {
+        .page {
+          width: min(100% - 30px, 540px);
+          padding-top: 20px;
+        }
+
+        .hero {
+          min-height: 340px;
+          padding: 42px 0 35px;
+        }
+
+        .hero::before {
+          top: 35px;
+          left: 1%;
+          width: 53px;
+          height: 53px;
+          font-size: 1.7rem;
+        }
+
+        .hero::after {
+          right: 1%;
+          bottom: 40px;
+        }
+
+        .journey {
+          grid-template-columns: 1fr;
+          gap: 12px;
+          padding-left: 9px;
+        }
+
+        .journey::before {
+          top: 32px;
+          bottom: 32px;
+          left: 22px;
+          width: 0;
+          border-top: 0;
+          border-left: 1px dashed #b9b5a8;
+        }
+
+        .step {
+          margin-left: 14px;
+        }
+
+        .step-head {
+          padding: 13px 15px;
+        }
+
+        .step-content {
+          min-height: 0;
+          padding: 17px 16px;
+        }
+
+        .placeholder {
+          min-height: 90px;
+        }
+
+        .fashion-result {
+          min-height: 155px;
+        }
+
+        .fashion-image,
+        .illustration {
+          height: 155px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <header class="topline">
+        <div class="brand"><span class="brand-mark" aria-hidden="true">↗</span> The accidental itinerary</div>
+        <span>Est. whenever you click</span>
+      </header>
+
+      <section class="hero" aria-labelledby="title">
+        <p class="eyebrow">A tiny machine for a big detour</p>
+        <h1 id="title">A Trip You<br><em>Never Planned.</em></h1>
+        <p class="intro">
+          One button sets off a chain reaction: a country, its weather, and
+          the least sensible thing you could possibly wear there.
+        </p>
+        <button class="launch" id="start" type="button">
+          <span class="launch-icon" aria-hidden="true">✳</span>
+          <span id="button-label">Surprise me</span>
+        </button>
+        <p class="status" id="status" role="status" aria-live="polite">
+          Your completely unplanned getaway is one click away.
+        </p>
+      </section>
+
+      <section class="journey" aria-label="Your trip, unfolding">
+        <article class="step" id="step-country" aria-labelledby="country-heading">
+          <header class="step-head">
+            <span class="step-number">01</span>
+            <h2 id="country-heading">Somewhere new</h2>
+          </header>
+          <div class="step-content" id="country-content">
+            <div class="placeholder">The world is still spinning...</div>
+          </div>
+        </article>
+
+        <article class="step" id="step-weather" aria-labelledby="weather-heading">
+          <header class="step-head">
+            <span class="step-number">02</span>
+            <h2 id="weather-heading">The forecast</h2>
+          </header>
+          <div class="step-content" id="weather-content">
+            <div class="placeholder">Clouds of uncertainty...</div>
+          </div>
+        </article>
+
+        <article class="step" id="step-outfit" aria-labelledby="outfit-heading">
+          <header class="step-head">
+            <span class="step-number">03</span>
+            <h2 id="outfit-heading">Packing regrets</h2>
+          </header>
+          <div class="step-content" id="outfit-content">
+            <div class="placeholder">A questionable look is brewing...</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="fashion-result" id="fashion-result" aria-label="Outfit inspiration" hidden>
+        <img class="fashion-image" id="fashion-image" alt="">
+        <div>
+          <p class="fashion-caption">
+            <strong id="fashion-title">A daily pick from The Met.</strong>
+            <span id="fashion-caption">A look inspired by your very strange forecast.</span>
+          </p>
+          <a class="met-link" id="met-object-link" target="_blank" rel="noopener noreferrer" hidden>
+            View this object at The Met
+          </a>
+        </div>
+      </section>
+
+      <p class="fine-print">
+        Destinations by REST Countries · Forecast by Open-Meteo · Daily image from The Met Collection
+      </p>
+    </main>
+
+    <script>
+      const startButton = document.querySelector("#start");
+      const buttonLabel = document.querySelector("#button-label");
+      const status = document.querySelector("#status");
+      const steps = {
+        country: document.querySelector("#step-country"),
+        weather: document.querySelector("#step-weather"),
+        outfit: document.querySelector("#step-outfit"),
+      };
+      const countryContent = document.querySelector("#country-content");
+      const weatherContent = document.querySelector("#weather-content");
+      const outfitContent = document.querySelector("#outfit-content");
+      const fashionResult = document.querySelector("#fashion-result");
+      const fashionImage = document.querySelector("#fashion-image");
+
+      const weatherDescriptions = {
+        0: "Clear skies",
+        1: "Mostly clear",
+        2: "Partly cloudy",
+        3: "Overcast",
+        45: "Foggy",
+        48: "Frosty fog",
+        51: "Light drizzle",
+        53: "Drizzle",
+        55: "Heavy drizzle",
+        56: "Freezing drizzle",
+        57: "Icy drizzle",
+        61: "Light rain",
+        63: "Rain",
+        65: "Heavy rain",
+        66: "Freezing rain",
+        67: "Icy rain",
+        71: "Light snow",
+        73: "Snow",
+        75: "Heavy snow",
+        77: "Snow grains",
+        80: "Passing showers",
+        81: "Rain showers",
+        82: "Heavy showers",
+        85: "Snow showers",
+        86: "Heavy snow showers",
+        95: "Thunderstorm",
+        96: "Thunder & hail",
+        99: "Thunder & hail",
+      };
+
+      const windColors = [
+        { max: 10, name: "butter yellow", value: "#f0cf55" },
+        { max: 25, name: "tomato red", value: "#e85c43" },
+        { max: 40, name: "electric blue", value: "#447bc4" },
+        { max: Infinity, name: "shimmering silver", value: "#a8a9a6" },
+      ];
+
+      const offlineCountries = [
+        { name: "Japan", capital: "Tokyo", flag: "🇯🇵", coordinates: [35.6762, 139.6503] },
+        { name: "Italy", capital: "Rome", flag: "🇮🇹", coordinates: [41.9028, 12.4964] },
+        { name: "Morocco", capital: "Rabat", flag: "🇲🇦", coordinates: [34.0209, -6.8416] },
+        { name: "Brazil", capital: "Brasília", flag: "🇧🇷", coordinates: [-15.7939, -47.8828] },
+        { name: "Iceland", capital: "Reykjavík", flag: "🇮🇸", coordinates: [64.1466, -21.9426] },
+        { name: "Thailand", capital: "Bangkok", flag: "🇹🇭", coordinates: [13.7563, 100.5018] },
+        { name: "Canada", capital: "Ottawa", flag: "🇨🇦", coordinates: [45.4215, -75.6972] },
+        { name: "Greece", capital: "Athens", flag: "🇬🇷", coordinates: [37.9838, 23.7275] },
+        { name: "Kenya", capital: "Nairobi", flag: "🇰🇪", coordinates: [-1.2921, 36.8219] },
+        { name: "New Zealand", capital: "Wellington", flag: "🇳🇿", coordinates: [-41.2866, 174.7756] },
+        { name: "Peru", capital: "Lima", flag: "🇵🇪", coordinates: [-12.0464, -77.0428] },
+        { name: "Norway", capital: "Oslo", flag: "🇳🇴", coordinates: [59.9139, 10.7522] },
+      ];
+
+      startButton.addEventListener("click", startTrip);
+
+      async function startTrip() {
+        startButton.disabled = true;
+        buttonLabel.textContent = "Chain reaction!";
+        status.classList.remove("error");
+        fashionResult.hidden = true;
+        resetSteps();
+        activateStep("country");
+        status.textContent = "Step 1: spinning the globe...";
+
+        try {
+          const country = await getRandomCountry();
+          renderCountry(country);
+          completeStep("country");
+
+          activateStep("weather");
+          status.textContent = country.offline
+            ? `Live country lookup unavailable; checking the skies over ${country.capital} from the offline list...`
+            : `Step 2: checking the skies over ${country.capital}...`;
+          const weather = await getWeather(country.coordinates);
+          renderWeather(weather);
+          completeStep("weather");
+
+          activateStep("outfit");
+          status.textContent = "Step 3: consulting the very questionable stylist...";
+          const outfit = chooseOutfit(weather);
+          renderOutfit(outfit);
+          completeStep("outfit");
+          await loadFashionImage(outfit, weather);
+
+          status.textContent = country.offline
+            ? "Live country lookup was blocked, so we picked from our offline list. Your itinerary is ready!"
+            : "Your itinerary is ready. No refunds, no take-backs.";
+        } catch (error) {
+          console.error("Unable to complete the trip:", error);
+          status.classList.add("error");
+          status.textContent = error.message || "The trip hit a snag. Please try again.";
+        } finally {
+          startButton.disabled = false;
+          buttonLabel.textContent = "Surprise me again";
+        }
+      }
+
+      function resetSteps() {
+        for (const [name, step] of Object.entries(steps)) {
+          step.classList.remove("active", "ready");
+          const content = {
+            country: countryContent,
+            weather: weatherContent,
+            outfit: outfitContent,
+          }[name];
+          content.replaceChildren();
+          const placeholder = document.createElement("div");
+          placeholder.className = "placeholder";
+          placeholder.textContent = {
+            country: "The world is still spinning...",
+            weather: "Clouds of uncertainty...",
+            outfit: "A questionable look is brewing...",
+          }[name];
+          content.append(placeholder);
+        }
+      }
+
+      function activateStep(name) {
+        steps[name].classList.add("active");
+      }
+
+      function completeStep(name) {
+        steps[name].classList.remove("active");
+        steps[name].classList.add("ready");
+      }
+
+      async function getRandomCountry() {
+        try {
+          const params = new URLSearchParams({
+            response_fields: "names.common,capitals.name,capitals.coordinates,flag.url_svg",
+            limit: "250",
+          });
+          const response = await fetch(
+            `https://api.restcountries.com/countries/v5?${params}`,
+            { headers: { Authorization: "rc_live_demo" } }
+          );
+          if (!response.ok) {
+            throw new Error(`Country API returned HTTP ${response.status}`);
+          }
+
+          const payload = await response.json();
+          const countries = payload.data?.objects;
+          if (!Array.isArray(countries)) {
+            throw new Error("Country API returned an unexpected response");
+          }
+          const eligible = countries.flatMap((country) => {
+            const capital = country.capitals?.find((entry) =>
+              Number.isFinite(entry.coordinates?.lat) &&
+              Number.isFinite(entry.coordinates?.lng)
+            );
+            if (!country.names?.common || !capital || !country.flag?.url_svg) return [];
+            return [{
+              name: country.names.common,
+              capital: capital.name,
+              flag: country.flag.url_svg,
+              coordinates: [capital.coordinates.lat, capital.coordinates.lng],
+            }];
+          });
+          if (eligible.length === 0) {
+            throw new Error("Country API returned no countries with capital coordinates");
+          }
+
+          return eligible[Math.floor(Math.random() * eligible.length)];
+        } catch (error) {
+          console.warn("Live country lookup failed; using an offline destination.", error);
+          const country = offlineCountries[Math.floor(Math.random() * offlineCountries.length)];
+          return { ...country, offline: true };
+        }
+      }
+
+      async function getWeather([latitude, longitude]) {
+        const params = new URLSearchParams({
+          latitude: String(latitude),
+          longitude: String(longitude),
+          current: "temperature_2m,apparent_temperature,weather_code,wind_speed_10m",
+          temperature_unit: "celsius",
+          wind_speed_unit: "kmh",
+          timezone: "auto",
+        });
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params}`);
+        if (!response.ok) {
+          throw new Error(`The weather service returned ${response.status}. Please try again.`);
+        }
+
+        const data = await response.json();
+        const current = data.current;
+        if (
+          !current ||
+          !Number.isFinite(current.temperature_2m) ||
+          !Number.isFinite(current.weather_code) ||
+          !Number.isFinite(current.wind_speed_10m)
+        ) {
+          throw new Error("The weather service returned incomplete forecast data. Please try again.");
+        }
+        return current;
+      }
+
+      function chooseOutfit(weather) {
+        let clothing;
+        if (weather.temperature_2m < 5) {
+          clothing = "Bikini";
+        } else if (weather.temperature_2m <= 15) {
+          clothing = "Summer Dress";
+        } else if (weather.temperature_2m <= 25) {
+          clothing = "Winter Coat";
+        } else {
+          clothing = "Thick Sweater";
+        }
+        const color = windColors.find((option) => weather.wind_speed_10m <= option.max);
+        return { clothing, color };
+      }
+
+      function renderCountry(country) {
+        const row = document.createElement("div");
+        row.className = "country-line";
+        const flag = document.createElement(country.offline ? "span" : "img");
+        flag.className = country.offline ? "flag flag-emoji" : "flag";
+        if (country.offline) {
+          flag.setAttribute("role", "img");
+          flag.setAttribute("aria-label", `Flag of ${country.name}`);
+          flag.textContent = country.flag;
+        } else {
+          flag.src = country.flag;
+          flag.alt = `Flag of ${country.name}`;
+        }
+        const details = document.createElement("div");
+        const name = document.createElement("p");
+        name.className = "country-name";
+        name.textContent = country.name;
+        const capital = document.createElement("p");
+        capital.className = "capital";
+        capital.textContent = `Capital: ${country.capital}`;
+        details.append(name, capital);
+        row.append(flag, details);
+        countryContent.replaceChildren(row);
+      }
+
+      function renderWeather(weather) {
+        const temperature = document.createElement("p");
+        temperature.className = "weather-temp";
+        temperature.append(document.createTextNode(`${Math.round(weather.temperature_2m)}°`));
+        const feels = document.createElement("span");
+        feels.textContent = `feels like ${Math.round(weather.apparent_temperature)}°C`;
+        temperature.append(feels);
+
+        const description = document.createElement("p");
+        description.className = "weather-description";
+        description.textContent = weatherDescriptions[weather.weather_code] || "A little mysterious";
+        const wind = document.createElement("p");
+        wind.className = "weather-meta";
+        wind.textContent = `Wind ${Math.round(weather.wind_speed_10m)} km/h · right now`;
+        weatherContent.replaceChildren(temperature, description, wind);
+      }
+
+      function renderOutfit(outfit) {
+        const title = document.createElement("p");
+        title.className = "outfit-type";
+        title.textContent = outfit.clothing;
+        const color = document.createElement("p");
+        color.className = "outfit-color";
+        color.textContent = `In ${outfit.color.name}. Obviously.`;
+        const query = document.createElement("span");
+        query.className = "query";
+        query.textContent = `${outfit.color.name} ${outfit.clothing.toLowerCase()}`;
+        outfitContent.replaceChildren(title, color, query);
+      }
+
+      async function loadFashionImage(outfit, weather) {
+        const clothingTerms = {
+          Bikini: "bikini",
+          "Summer Dress": "dress",
+          "Winter Coat": "coat",
+          "Thick Sweater": "sweater",
+        };
+        const query = clothingTerms[outfit.clothing];
+        if (!query) {
+          showFashionFallback(outfit, outfit.clothing, null);
+          return;
+        }
+        const modifiedDate = weather.dataModified || weather.time;
+        const date = typeof modifiedDate === "string"
+          ? modifiedDate.match(/^\d{4}-\d{2}-\d{2}/)?.[0]
+          : null;
+        try {
+          if (!date) {
+            throw new Error("The weather response did not include a valid data date.");
+          }
+
+          const params = new URLSearchParams({
+            hasImages: "true",
+            q: query,
+            limit: "1",
+            offset: "0",
+          });
+          const searchResponse = await fetch(
+            `https://collectionapi.metmuseum.org/public/collection/v1.1/search?${params}`
+          );
+          if (!searchResponse.ok) {
+            throw new Error(`The Met search returned HTTP ${searchResponse.status}`);
+          }
+          const search = await searchResponse.json();
+          if (!Number.isInteger(search.total) || search.total === 0) {
+            throw new Error(`The Met has no matching objects for "${query}".`);
+          }
+
+          const dayOfYear = Math.floor(
+            (Date.parse(`${date}T00:00:00Z`) - Date.parse(`${date.slice(0, 4)}-01-01T00:00:00Z`)) /
+            86400000
+          );
+          const offset = (dayOfYear * 8) % search.total;
+          params.set("limit", "8");
+          params.set("offset", String(offset));
+          const pageResponse = await fetch(
+            `https://collectionapi.metmuseum.org/public/collection/v1.1/search?${params}`
+          );
+          if (!pageResponse.ok) {
+            throw new Error(`The Met search returned HTTP ${pageResponse.status}`);
+          }
+          const objectIDs = (await pageResponse.json()).objectIDs;
+          if (!Array.isArray(objectIDs) || objectIDs.length === 0) {
+            throw new Error("The Met search returned no objects for this day.");
+          }
+          const objects = await Promise.all(
+            objectIDs.map(async (objectID) => {
+              const objectResponse = await fetch(
+                `https://collectionapi.metmuseum.org/public/collection/v1/objects/${objectID}`
+              );
+              if (!objectResponse.ok) return null;
+              return objectResponse.json();
+            })
+          );
+          const object = objects.find((item) =>
+            item &&
+            typeof item.primaryImageSmall === "string" &&
+            item.primaryImageSmall.startsWith("https://") &&
+            matchesClothingObject(item, query)
+          );
+          if (!object) {
+            throw new Error("The Met search results did not include an accessible image.");
+          }
+          showMetObject(object, outfit, query, date);
+        } catch (error) {
+          console.info("Met Collection image unavailable; showing the outfit illustration instead.", error);
+          showFashionFallback(outfit, query, date);
+        }
+      }
+
+      function matchesClothingObject(object, clothing) {
+        const objectName = object.objectName?.trim().toLowerCase();
+        const title = object.title?.trim().toLowerCase();
+        return objectName === clothing || title === clothing;
+      }
+
+      function showMetObject(object, outfit, query, date) {
+        const link = document.querySelector("#met-object-link");
+        fashionImage.onerror = () => showFashionFallback(outfit, query, date);
+        fashionImage.src = object.primaryImageSmall;
+        fashionImage.alt = object.title || `Met Collection object related to ${query}`;
+        document.querySelector("#fashion-title").textContent = object.title || "A daily pick from The Met.";
+        const details = [object.objectDate, object.artistDisplayName]
+          .filter(Boolean)
+          .join(" · ");
+        document.querySelector("#fashion-caption").textContent =
+          `The Met Collection · Daily pick for ${date}${details ? ` · ${details}` : ""}.`;
+        link.href = object.objectURL;
+        link.hidden = !object.objectURL;
+        fashionResult.hidden = false;
+      }
+
+      function showFashionFallback(outfit, query, date) {
+        fashionImage.onerror = null;
+        fashionImage.src = makeOutfitIllustration(outfit.color.value);
+        fashionImage.alt = `Illustration of an absurd ${outfit.color.name} ${outfit.clothing.toLowerCase()}`;
+        document.querySelector("#fashion-title").textContent = "The look, in spirit.";
+        document.querySelector("#fashion-caption").textContent =
+          `No matching Met image was available for ${date || "today"}. Your ${query} is still runway-ready (allegedly).`;
+        document.querySelector("#met-object-link").hidden = true;
+        fashionResult.hidden = false;
+      }
+
+      function makeOutfitIllustration(color) {
+        const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 300">
+          <rect width="240" height="300" rx="22" fill="#eee9dc"/>
+          <circle cx="120" cy="65" r="35" fill="#d8a77c"/>
+          <path d="M87 59c3-35 62-43 69 1-15-12-44-15-69-1Z" fill="#282820"/>
+          <path d="m83 116 37-14 37 14 26 91H57l26-91Z" fill="${color}" stroke="#282820" stroke-width="5" stroke-linejoin="round"/>
+          <path d="m84 116 36 48 36-48M120 164v43" fill="none" stroke="#282820" stroke-width="4"/>
+          <path d="M79 207h38l-8 62H75l4-62Zm44 0h38l4 62h-34l-8-62Z" fill="#f9f4e7" stroke="#282820" stroke-width="5" stroke-linejoin="round"/>
+          <path d="m71 269 38 0 7 13H63l8-13Zm52 0 39 0 12 13h-49l-2-13Z" fill="#f26b42" stroke="#282820" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M58 144 43 192m139-48 15 48" stroke="#d8a77c" stroke-width="12" stroke-linecap="round"/>
+          <path d="m31 72 5 12 13 2-10 8 3 13-11-7-11 7 3-13-10-8 13-2 5-12Zm174 45 4 9 10 1-8 7 2 10-8-5-8 5 2-10-8-7 10-1 4-9Z" fill="#d5f06d" stroke="#282820" stroke-width="2"/>
+        </svg>`;
+        return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      }
+    </script>
+  </body>
+</html>
